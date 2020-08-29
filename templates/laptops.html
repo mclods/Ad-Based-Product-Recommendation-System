@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+    <head>
+        {% if title %}
+            <title>Dell - {{ title }}</title>
+        {% else %}
+            <title>Dell - Official Site</title>
+        {% endif %}
+        
+        <!-- Custom Favicon -->
+        <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    </head>
+    <body>
+        <!-- Top Navbar -->
+        <div class="top-nav-bar">
+            <div class="search-box">
+                <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="search" class="logo"></a>
+                <input type="text" class="form-control" id="search_data" placeholder="Quick Search" onkeyup="searchFunction()">
+                <button class="input-group-text" type="button"><i class="fa fa-sort" style="color: #fff;" aria-hidden="true"></i></button>
+            </div>
+
+            <div class="menu-bar">
+                <ul>
+                    <li><a href="#" onclick="redir()"><i class="fa fa-shopping-basket" aria-hidden="true"></i></a></li>
+                    <li><a href="{{ url_for('login') }}"><i class="fa fa-sign-in" aria-hidden="true"></i></a></li>
+                    <li><a href="{{ url_for('register') }}"><i class="fa fa-user-plus" aria-hidden="true"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- end Top Navbar -->
+        
+        <!-- On Sale -->
+        <section class="on-sale">
+            <div class="container">
+                <div class="title-box">
+                    <h2>Our Laptops</h2>
+                </div>
+                <div class="row" id="tbz">
+                    {% for data in lap_data1 %}
+                    <div class="col-md-3">
+                        <div class="product-top">
+                            <img id="z{{ data.index }}"src="{{ url_for('static', filename='images/img7.jpg') }}">
+                            <div class="overlay-right">
+                                <button type="button" class="btn btn-secondary" title="Quick Shop">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                                <button type="button" class="btn btn-secondary" title="Add to Wishlist">
+                                    <i class="fa fa-heart-o"></i>
+                                </button>
+                                <button type="button" class="btn btn-secondary" title="Add to Cart" onclick="cartadd({{ data.index }})">
+                                    <i class="fa fa-shopping-cart" id="i{{ data.index }}"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-bottom text-center">
+                            <br>
+                            <h3>{{ data.company }} {{ data.product }}</h3>
+                            <h5>${{ data.price }}</h5>
+                            <h6 id="{{ data.index }}" style="color: red; display: none;">Selected</h6>
+                            <h6 style="color: #3287c1;">CPU : {{ data.cpu }}</h6>
+                            <h6 style="color: #3287c1;">RAM : {{ data.ram }}</h6>
+                            <h6 style="color: #3287c1;">GPU : {{ data.gpu }}</h6>
+                            <br>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        <!-- end On Sale-->
+        
+        <!-- Footer -->
+        <section class="footer">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h1>Useful Links</h1>
+                        <p>Privacy Policy</p>
+                        <p>Terms of Use</p>
+                        <p>Return Policy</p>
+                        <p>Discount Policy</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h1>Company</h1>
+                        <p>About Us</p>
+                        <p>Contact Us</p>
+                        <p>Careers</p>
+                        <p>Affiliate</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h1>Follow Us On</h1>
+                        <p><i class="fa fa-facebook-official"></i>  Facebook</p>
+                        <p><i class="fa fa-youtube-play"></i>  Youtube</p>
+                        <p><i class="fa fa-linkedin"></i>  LinkedIn</p>
+                        <p><i class="fa fa-twitter"></i>  Twitter</p>
+                    </div>
+                    <div class="col-md-3 footer-image">
+                        <h1>Download App</h1>
+                        <img src="{{ url_for('static', filename='images/img15.png') }}">
+                    </div>
+                </div>
+                <hr>
+                <p class="copyright">Dell Inc.</p>
+            </div>
+        </section>
+        <!-- end Footer -->
+        
+        <!-- Custom Internal Javascript -->
+        <script type="text/javascript">
+            var indexes = [];
+            
+            function cartadd(temp) {
+                if (document.getElementById(temp).style.display == "none") {
+                    document.getElementById("i".concat(temp)).className="fa fa-cart-arrow-down";
+                    document.getElementById(temp).style.display="block";
+                    document.getElementById("z".concat(temp)).src="https://dummyimage.com/3456X4320/808080/fdf5e6&text=Added+to+Cart";
+                    indexes.push(temp);
+                    console.log(temp);    
+                } else {
+                    document.getElementById("i".concat(temp)).className="fa fa-shopping-cart";
+                    document.getElementById(temp).style.display="none";
+                    document.getElementById("z".concat(temp)).src="{{ url_for('static', filename='images/img7.jpg') }}";
+                    indexes.pop(temp);
+                    console.log(temp); 
+                }
+            }
+            
+            function redir() {
+                console.log(indexes);
+                console.log(indexes.length);
+                if (indexes.length == 0) {
+                    alert("Cart is empty!");
+                } else {
+                    entry = { data: indexes };
+                    console.log(entry);
+                    
+                    fetch(`${window.origin}/laptops`, {
+                        method: "POST",
+                        credentials: "include",
+                        body: JSON.stringify(entry),
+                        cache: "no-cache",
+                        headers: new Headers({
+                            "content-type": "application/json"
+                        })
+                    })
+                    
+                    .then(function (response) {
+                    if (response.status !== 200) {
+                        console.log(`Response status was not 200: ${response.status}`);
+                        return;
+                    }
+                    
+                    response.json().then(function (data) {
+                        console.log(data);
+                    })
+                })
+                    document.location.href="{{ url_for('cart') }}";
+                    
+                }
+            }
+            
+            function searchFunction() {
+               var input = document.getElementById('search_data').value
+	           input = input.toLowerCase();
+	           var z = document.getElementById('tbz');
+                console.log(z);
+               var x = z.getElementsByClassName('col-md-3'); 
+
+	           for (i = 0; i < x.length; i++) {
+	               if (!x[i].innerHTML.toLowerCase().includes(input)) {
+	                   x[i].style.display="none";
+	               }
+	               else {
+	                   x[i].style.display="block";
+	               }
+	           }
+            }
+            
+        </script>
+
+        <!-- Bootstrap jQuery -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+
+        <!-- Bootstrap Javascript -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    </body>
+</html>

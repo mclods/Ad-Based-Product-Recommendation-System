@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="container">
+        {% if req %}
+            <!-- <p class="text-muted">Recommendation: {{ req.consent }}<br>Search: {{ req.search }}</p> -->
+            {% if req.search != "Test" %}
+                <p class="text-muted">Search: {{ req.search }}</p>
+                <hr>
+            {% endif %}
+        {% else %}
+            <p class="text-muted">Unable to fetch data from server ...</p>
+            <hr>
+        {% endif %}
+        
+        {% if serc %}
+            <p class="lead"><strong>Search Results</strong></p>
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                    <th scope="col">Laptop</th>
+                    <th scope="col">Details</th>
+                    <th scope="col">Buy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="https://img.icons8.com/bubbles/100/000000/monitor.png"><br>{{ serc.company }} {{ serc.product }} {{ serc.type }}<br><strong>${{ serc.price }}</strong></td>
+                        <td>Screen Size : {{ serc.screen_size }}<br>Resolution : {{ serc.resolution }}<br>CPU : {{ serc.cpu }}<br>RAM : {{ serc.ram }}<br>Memory : {{ serc.memory }}<br>GPU : {{ serc.gpu }}<br>OS : {{ serc.op }}<br>Weight : {{ serc.weight }}</td>
+                        <td><input type="checkbox" style="height: 20px; width: 20px;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        {% elif req.search == "Test" %}
+             <p class="lead" style="color: red;"><strong>:) Recommended by Experts.</strong></p>
+        {% else %}
+            <p class="lead" style="color: red;"><strong>:( Searched Laptop not found.</strong></p>
+        {% endif %}
+        
+        <hr>
+        
+        {% if rec_list %}
+            <!-- <p class="text-muted">ML Data Obtained ...</p>
+            <hr> -->
+            <p class="lead"><strong>These Laptops may interest you ...</strong></p>
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Laptop</th>
+                    <th scope="col">Details</th>
+                    <th scope="col">Buy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in rec_list %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td><img src="https://img.icons8.com/bubbles/100/000000/monitor.png"><br>{{ data.company }} {{ data.product }} {{ data.type }}<br><strong>${{ data.price }}</strong></td>
+                        <td>Screen Size : {{ data.screen_size }}<br>Resolution : {{ data.resolution }}<br>CPU : {{ data.cpu }}<br>RAM : {{ data.ram }}<br>Memory : {{ data.memory }}<br>GPU : {{ data.gpu }}<br>OS : {{ data.op }}<br>Weight : {{ data.weight }}</td>
+                        <td><input type="checkbox" style="height: 20px; width: 20px;"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+        {% if 'no' in req.consent %}
+            <p class="text-muted">Recommendation is OFF ...</p>
+            <hr>
+            <!-- <p class="lead">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+            </p> -->
+            <br>
+            <br>
+            <br>
+            <br>
+        {% endif %}
+        {% if 'yes' in req.consent %}
+            <script type="text/javascript">
+                location.reload(true);
+            </script>
+        {% endif %}
+        {% endif %}
+    </div>
+    
+
+{% endblock content %}
