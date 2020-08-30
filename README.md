@@ -1,4 +1,4 @@
-# Ad-Based-Product-Recommendation-System
+# Ad-Based-Product-Recommendation-System 💖
 
 > Personalized recommendations based on User Activity Tracking
 
@@ -9,5 +9,10 @@
 * In this project, I've tried to implement a smaller version of the Ad System used by Amazon in which an Ad appears on a random shopping website and if the user clicks on that Ad then he/she is redirected to our website where we provide recommendations based on user's activity on the previous website. 
 
 * This system can provide personalized recommendations that can help the user get the best product and the company more revenue.
+
+### Get Started ⚡⚡⚡
+```python
+  pip install -r requirements.txt
+```
 
 ![Markdown Logo](capture.gif)
